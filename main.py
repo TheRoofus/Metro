@@ -1,8 +1,6 @@
 import pygame
-
-from Media.colors import colors
-from Logic.trains.firstTrain import FirstTrain
-from Logic.men.testPlayer import Player
+from src.components.trains.firstTrain import FirstTrain
+from src.components.men.testPlayer import Player
 from lib.variables import WIDTH, HEIGHT, FPS
 from searchImage import search_image
 
@@ -35,7 +33,7 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(FirstTrain())
 all_sprites.add(Player())
 
-background = pygame.image.load(search_image('space', 'Metro.png')).convert()
+background = pygame.image.load(search_image('maps', 'Metro.png')).convert()
 bcgd_width = background.get_rect().width
 x = 0
 
