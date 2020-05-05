@@ -1,4 +1,5 @@
 import pygame
+
 from Media.colors import colors
 from Logic.trains.firstTrain import FirstTrain
 from Logic.men.testPlayer import Player
@@ -59,4 +60,3 @@ while running:
     pygame.display.flip()
 
 pygame.quit()
-
