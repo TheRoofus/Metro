@@ -1,4 +1,4 @@
-from src.train_game.app import App
+from train_game.app import App
 
 
 def main():

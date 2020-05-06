@@ -18,7 +18,7 @@ setup(
     version='0.1',
     entry_points={
         'console_scripts': [
-            'train_game=src.game:main',
+            'train_game=train_game.game:main',
         ],
     },
 )
