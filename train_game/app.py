@@ -3,13 +3,14 @@ import esper
 import pymunk
 import train_game.components.physics
 
+
+from train_game.drawable.polygon import Polygon
 from train_game.components.position import Position
+from train_game.components.rotation import Rotation
 from train_game.components.physics import Physics, PhysicsProcessor
 from train_game.components.renderable import Renderable, RenderProcessor
-from os import path
 
 RESOLUTION = (800, 600)
-IMAGE_DIR = path.join(path.dirname(__file__), 'resources/assets')
 FPS = 60
 
 
@@ -29,28 +30,40 @@ class App:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE or event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    self.world.component_for_entity(self.player, Physics). \
-                        body.apply_impulse_at_local_point((-100, 0))
-                elif event.key == pygame.K_RIGHT:
-                    self.world.component_for_entity(self.player, Physics). \
-                        body.apply_impulse_at_local_point((100, 0))
-                elif event.key == pygame.K_UP:
-                    self.world.component_for_entity(self.player, Physics).body.apply_impulse_at_local_point((0, -100))
-                elif event.key == pygame.K_DOWN:
-                    self.world.component_for_entity(self.player, Physics).body.apply_impulse_at_local_point((0, 100))
-                elif event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:
                     self.running = False
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_q]:
+            body = self.world.component_for_entity(self.player, Physics).body
+            body.angular_velocity = body.angular_velocity - 0.5
+        if keys[pygame.K_e]:
+            body = self.world.component_for_entity(self.player, Physics).body
+            body.angular_velocity = body.angular_velocity + 0.5
+        if keys[pygame.K_w]:
+            body = self.world.component_for_entity(self.player, Physics).body
+            body.apply_impulse_at_world_point((0, -100), body.position)
+        if keys[pygame.K_s]:
+            body = self.world.component_for_entity(self.player, Physics).body
+            body.apply_impulse_at_world_point((0, 100), body.position)
+        if keys[pygame.K_a]:
+            body = self.world.component_for_entity(self.player, Physics).body
+            body.apply_impulse_at_world_point((-100, 0), body.position)
+        if keys[pygame.K_d]:
+            body = self.world.component_for_entity(self.player, Physics).body
+            body.apply_impulse_at_world_point((100, 0), body.position)
 
     def __create_level(self):
         self.player = self.world.create_entity()
+        p = Physics(self.phys_world, shape_data=[50],
+                    body_shape_type=train_game.components.physics.BodyShapeType.BOX,
+                    body_type=train_game.components.physics.BodyType.DYNAMIC, mass=10)
+        p.body.position = (100, 100)
+        self.world.add_component(self.player, p)
+        self.world.add_component(self.player, Position())
+        self.world.add_component(self.player, Rotation())
         self.world.add_component(self.player,
-                                 Physics(self.phys_world, shape_data=[50],
-                                         body_shape_type=train_game.components.physics.BodyShapeType.BOX,
-                                         body_type=train_game.components.physics.BodyType.DYNAMIC))
-        self.world.add_component(self.player, Position(100, 100))
-        self.world.add_component(self.player,
-                                 Renderable(image=pygame.image.load(path.join(IMAGE_DIR, "redsquare.png"))))
+                                 Renderable(Polygon((255, 255, 255), [(-25, 25), (25, 25), (25, -25), (-25, -25)])))
 
         wall = self.world.create_entity()
         self.world.add_component(

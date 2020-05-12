@@ -4,6 +4,7 @@ import pymunk
 from enum import Enum
 from pymunk.vec2d import Vec2d
 from train_game.components.position import Position
+from train_game.components.rotation import Rotation
 
 
 class BodyShapeType(Enum):
@@ -29,8 +30,9 @@ class Physics:
         elif body_shape_type == BodyShapeType.BOX:
             size = shape_data[0]
             moment = pymunk.moment_for_box(mass, (size, size))
+            size = size * 0.5
             self.body = pymunk.Body(mass, moment)
-            self.shape = pymunk.Poly(self.body, [(0.0, 0.0), (size, 0.0), (size, size), (0.0, size)])
+            self.shape = pymunk.Poly(self.body, [(-size, size), (size, size), (size, -size), (-size, -size)])
         elif body_shape_type == BodyShapeType.SEGMENT:
             moment = pymunk.moment_for_segment(mass, shape_data[0], shape_data[1], 1)
             self.body = pymunk.Body(mass, moment)
@@ -66,3 +68,7 @@ class PhysicsProcessor(esper.Processor):
         for ent, (phys, pos) in self.world.get_components(Physics, Position):
             pos.x = phys.body.position.x
             pos.y = phys.body.position.y
+
+            if self.world.has_component(ent, Rotation):
+                self.world.component_for_entity(ent, Rotation).a = phys.body.angle
+
