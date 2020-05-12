@@ -10,6 +10,7 @@ from train_game.components.rotation import Rotation
 from train_game.components.physics import Physics, PhysicsProcessor
 from train_game.components.renderable import Renderable, RenderProcessor
 
+
 RESOLUTION = (800, 600)
 FPS = 60
 
@@ -23,7 +24,7 @@ class App:
         self.running = False
         self.world = esper.World()
         self.phys_world = pymunk.Space()
-        self.phys_world.gravity = 0.0, 0.0
+        self.phys_world.gravity = 0.0, 900.0
 
     def __process_input(self):
         for event in pygame.event.get():

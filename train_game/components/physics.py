@@ -49,7 +49,8 @@ class Physics:
         else:
             self.body.body_type = pymunk.Body.KINEMATIC
 
-        self.shape.elasticity = 0.9999999
+        self.shape.elasticity = 0.5
+        self.shape.friction = 1
         self.body.position = (x, y)
         self.body.start_position = Vec2d(self.body.position)
 
